@@ -1,0 +1,20 @@
+# Ignore all .log files
+*.log
+
+# Ignore the node_modules directory
+node_modules/
+
+# Ignore all .txt files
+*.txt
+
+# Ignore a specific file
+/path/to/my/file.txt
+
+# Ignore a directory and its contents
+/my_directory/*
+
+# Ignore all files in the current directory and subdirectories
+*/*
+
+# Exception: Track a specific file
+!important.txt
