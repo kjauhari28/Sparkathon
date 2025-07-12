@@ -1,0 +1,61 @@
+/* SalesUi.css */
+
+.sales-wrapper {
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(to right, #e0f7fa, #fffde7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  
+  
+  .sales-wrapper h3 {
+    text-align: center;
+    color: #0277bd;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+  }
+  
+  .back-button {
+    align-self: flex-start;
+    margin-bottom: 1rem;
+    font-size: 14px;
+    background: none;
+    border: none;
+    color: #0277bd;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .sales-table {
+    width: 100%;
+    max-width: 800px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sales-table table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #020303;
+  }
+  
+  .sales-table th,
+  .sales-table td {
+    border: 1px solid #b2ebf2;
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+  }
+  
+  .sales-table th {
+    background-color: #b3e5fc;
+    color: #000;
+  }
+  
