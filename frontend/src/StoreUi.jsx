@@ -28,4 +28,5 @@ const StoreUI = () => {
     const matchLocation = selectedLocation ? store.geo === selectedLocation : true;
     const matchReligion = selectedReligion ? store.religion === selectedReligion : true;
     const matchSearch = store.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchLocation && matchReligion && matchSe
+    return matchLocation && matchReligion && matchSearch;
+  });
