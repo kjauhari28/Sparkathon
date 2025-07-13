@@ -2,7 +2,8 @@ import { supabase } from '../db/index.js';
 
 export class StoreSkuModel {
   constructor() {
-    this.tableName = 'store_skus';
+    // Use singular 'store_sku' to match the junction table defined with proper foreign keys
+    this.tableName = 'store_sku';
     this.supabase = supabase;
   }
 

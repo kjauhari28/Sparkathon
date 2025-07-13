@@ -36,10 +36,10 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/store-skus/store/:storeId - Get all SKUs for a specific store
-router.get('/store/:storeId', async (req, res) => {
+router.get('/store/:store_id', async (req, res) => {
   try {
-    const { storeId } = req.params;
-    const skus = await StoreSkuModel.findSkusByStore(storeId);
+    const { store_id } = req.params;
+    const skus = await StoreSkuModel.findSkusByStore(store_id);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -55,11 +55,11 @@ router.get('/store/:storeId', async (req, res) => {
   }
 });
 
-// GET /api/store-skus/sku/:skuId - Get all stores for a specific SKU
-router.get('/sku/:skuId', async (req, res) => {
+// GET /api/store-skus/sku/:sku_id - Get all stores for a specific SKU
+router.get('/sku/:sku_id', async (req, res) => {
   try {
-    const { skuId } = req.params;
-    const stores = await StoreSkuModel.findStoresBySku(skuId);
+    const { sku_id } = req.params;
+    const stores = await StoreSkuModel.findStoresBySku(sku_id);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -75,11 +75,11 @@ router.get('/sku/:skuId', async (req, res) => {
   }
 });
 
-// GET /api/store-skus/exists/:storeId/:skuId - Check if relationship exists
-router.get('/exists/:storeId/:skuId', async (req, res) => {
+// GET /api/store-skus/exists/:store_id/:sku_id - Check if relationship exists
+router.get('/exists/:store_id/:sku_id', async (req, res) => {
   try {
-    const { storeId, skuId } = req.params;
-    const exists = await StoreSkuModel.exists(storeId, skuId);
+    const { store_id, sku_id } = req.params;
+    const exists = await StoreSkuModel.exists(store_id, sku_id);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -190,12 +190,12 @@ router.post('/batch', async (req, res) => {
   }
 });
 
-// DELETE /api/store-skus/:storeId/:skuId - Delete store-sku relationship
-router.delete('/:storeId/:skuId', async (req, res) => {
+// DELETE /api/store-skus/:store_id/:sku_id - Delete store-sku relationship
+router.delete('/:store_id/:sku_id', async (req, res) => {
   try {
-    const { storeId, skuId } = req.params;
+    const { store_id, sku_id } = req.params;
     
-    await StoreSkuModel.delete(storeId, skuId);
+    await StoreSkuModel.delete(store_id, sku_id);
     
     res.status(STATUS_CODES.OK).json({
       success: true,

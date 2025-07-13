@@ -40,11 +40,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/stores/:id - Get store by ID
-router.get('/:id', async (req, res) => {
+// GET /api/stores/:store_id - Get store by ID
+router.get('/:store_id', async (req, res) => {
   try {
-    const { id } = req.params;
-    const store = await StoreModel.findById(id);
+    const { store_id } = req.params;
+    const store = await StoreModel.findById(store_id);
     
     if (!store) {
       return res.status(STATUS_CODES.NOT_FOUND).json({
@@ -149,16 +149,15 @@ router.get('/filter/religion/:religion', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const storeData = req.body;
-    
     // Validate required fields
-    if (!storeData.geo) {
+    const { store_id, geo, religion } = storeData;
+    if (!store_id || !geo) {
       return res.status(STATUS_CODES.BAD_REQUEST).json({
         success: false,
-        message: 'Geo location is required'
+        message: 'store_id and geo are required'
       });
     }
-    
-    const newStore = await StoreModel.create(storeData);
+    const newStore = await StoreModel.create({ store_id, geo, religion });
     
     res.status(STATUS_CODES.CREATED).json({
       success: true,
@@ -174,13 +173,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/stores/:id - Update store
-router.put('/:id', async (req, res) => {
+// PUT /api/stores/:store_id - Update store
+router.put('/:store_id', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { store_id } = req.params;
     const updateData = req.body;
-    
-    const updatedStore = await StoreModel.update(id, updateData);
+    const updatedStore = await StoreModel.update(store_id, updateData);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -196,11 +194,11 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/stores/:id - Delete store
-router.delete('/:id', async (req, res) => {
+// DELETE /api/stores/:store_id - Delete store
+router.delete('/:store_id', async (req, res) => {
   try {
-    const { id } = req.params;
-    await StoreModel.delete(id);
+    const { store_id } = req.params;
+    await StoreModel.delete(store_id);
     
     res.status(STATUS_CODES.OK).json({
       success: true,

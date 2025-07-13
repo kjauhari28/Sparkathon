@@ -96,4 +96,46 @@ export class StoreModel extends BaseModel {
   }
 }
 
-export default new StoreModel();
+// Override CRUD to handle string primary key "store_id"
+export default new (class extends StoreModel {
+  // Override findById to use store_id
+  async findById(storeId) {
+    const { data, error } = await this.supabase
+      .from(this.tableName)
+      .select('*')
+      .eq('store_id', storeId)
+      .single();
+    if (error) throw error;
+    return data;
+  }
+  // Create new store with text primary key
+  async create({ store_id, geo, religion }) {
+    const { data, error } = await this.supabase
+      .from(this.tableName)
+      .insert([{ store_id, geo, religion }])
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+  // Update existing store by store_id
+  async update(storeId, updateData) {
+    const { data, error } = await this.supabase
+      .from(this.tableName)
+      .update(updateData)
+      .eq('store_id', storeId)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+  // Delete store by store_id
+  async delete(storeId) {
+    const { error } = await this.supabase
+      .from(this.tableName)
+      .delete()
+      .eq('store_id', storeId);
+    if (error) throw error;
+    return true;
+  }
+})();

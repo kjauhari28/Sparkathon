@@ -40,33 +40,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/skus/:id - Get SKU by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const sku = await SkuModel.findById(id);
-    
-    if (!sku) {
-      return res.status(STATUS_CODES.NOT_FOUND).json({
-        success: false,
-        message: MESSAGES.NOT_FOUND
-      });
-    }
-    
-    res.status(STATUS_CODES.OK).json({
-      success: true,
-      data: sku,
-      message: MESSAGES.SUCCESS
-    });
-  } catch (error) {
-    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      error: error.message,
-      message: MESSAGES.ERROR
-    });
-  }
-});
-
 // GET /api/skus/name/:name - Get SKU by name
 router.get('/name/:name', async (req, res) => {
   try {
@@ -94,7 +67,7 @@ router.get('/name/:name', async (req, res) => {
   }
 });
 
-// GET /api/skus/short-shelf-life - Get SKUs with short shelf life
+// GET /api/skus/filter/short-shelf-life - Get SKUs with short shelf life
 router.get('/filter/short-shelf-life', async (req, res) => {
   try {
     const { max_days = 7 } = req.query;
@@ -114,20 +87,43 @@ router.get('/filter/short-shelf-life', async (req, res) => {
   }
 });
 
+// GET /api/skus/:sku_id - Get SKU by ID
+router.get('/:sku_id', async (req, res, next) => {
+  try {
+    const { sku_id } = req.params;
+    const sku = await SkuModel.findById(sku_id);
+    
+    if (!sku) {
+      return res.status(STATUS_CODES.NOT_FOUND).json({
+        success: false,
+        message: MESSAGES.NOT_FOUND
+      });
+    }
+    
+    res.status(STATUS_CODES.OK).json({
+      success: true,
+      data: sku,
+      message: MESSAGES.SUCCESS
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // POST /api/skus - Create a new SKU
 router.post('/', async (req, res) => {
   try {
     const skuData = req.body;
-    
     // Validate required fields
-    if (!skuData.name) {
+    const { sku_id, name, shelf_life_days } = skuData;
+    if (!sku_id || !name || shelf_life_days == null) {
       return res.status(STATUS_CODES.BAD_REQUEST).json({
         success: false,
-        message: 'Name is required'
+        message: 'sku_id, name, and shelf_life_days are required'
       });
     }
     
-    const newSku = await SkuModel.create(skuData);
+    const newSku = await SkuModel.create({ sku_id, name, shelf_life_days });
     
     res.status(STATUS_CODES.CREATED).json({
       success: true,
@@ -143,13 +139,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/skus/:id - Update SKU
-router.put('/:id', async (req, res) => {
+// PUT /api/skus/:sku_id - Update SKU
+router.put('/:sku_id', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { sku_id } = req.params;
     const updateData = req.body;
     
-    const updatedSku = await SkuModel.update(id, updateData);
+    const updatedSku = await SkuModel.update(sku_id, updateData);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -165,11 +161,11 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/skus/:id - Delete SKU
-router.delete('/:id', async (req, res) => {
+// DELETE /api/skus/:sku_id - Delete SKU
+router.delete('/:sku_id', async (req, res) => {
   try {
-    const { id } = req.params;
-    await SkuModel.delete(id);
+    const { sku_id } = req.params;
+    await SkuModel.delete(sku_id);
     
     res.status(STATUS_CODES.OK).json({
       success: true,

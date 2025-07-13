@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-// Route imports - temporarily commented out for debugging
-// import authRoutes from './routes/auth.js';
-// import userRoutes from './routes/users.js';
-// import skuRoutes from './routes/skus.js';
-// import storeRoutes from './routes/stores.js';
-// import storeSkuRoutes from './routes/store-skus.js';
-// import salesDataRoutes from './routes/sales-data.js';
+// Route imports
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/users.js';
+import skuRoutes from './routes/skus.js';
+import storeRoutes from './routes/stores.js';
+import storeSkuRoutes from './routes/store-skus.js';
+import salesDataRoutes from './routes/sales-data.js';
 
 dotenv.config();
 
@@ -15,8 +15,9 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Register simple GET routes before body parsers to avoid parsing empty GET bodies
+// (moved express.json/urlencoded further down)
 
 // Test route
 app.get('/', (req, res) => {
@@ -71,18 +72,29 @@ app.post('/api/test', (req, res) => {
   });
 });
 
-// Routes - temporarily commented out for debugging
-// app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
-// app.use('/api/skus', skuRoutes);
-// app.use('/api/stores', storeRoutes);
-// app.use('/api/store-skus', storeSkuRoutes);
-// app.use('/api/sales-data', salesDataRoutes);
+// Body parsers for API routes, skipping GET requests to prevent parsing empty bodies
+app.use('/api', (req, res, next) => {
+  if (req.method === 'GET') return next();
+  express.json()(req, res, next);
+});
+app.use('/api', (req, res, next) => {
+  if (req.method === 'GET') return next();
+  express.urlencoded({ extended: true })(req, res, next);
+});
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/skus', skuRoutes);
+app.use('/api/stores', storeRoutes);
+app.use('/api/store-skus', storeSkuRoutes);
+app.use('/api/sales-data', salesDataRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  // Return error message only
+  res.status(500).json({ error: err.message });
 });
 
 // 404 handler

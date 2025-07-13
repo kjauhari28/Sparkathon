@@ -9,11 +9,7 @@ export class SalesDataModel {
   // Get all sales data with optional filtering
   async findAll(options = {}) {
     try {
-      let query = this.supabase.from(this.tableName).select(`
-        *,
-        stores!inner(*),
-        skus!inner(*)
-      `);
+      let query = this.supabase.from(this.tableName).select('*');
       
       if (options.filters) {
         Object.entries(options.filters).forEach(([key, value]) => {
@@ -56,11 +52,7 @@ export class SalesDataModel {
     try {
       const { data, error } = await this.supabase
         .from(this.tableName)
-        .select(`
-          *,
-          stores!inner(*),
-          skus!inner(*)
-        `)
+        .select('*')
         .eq('store_id', storeId)
         .eq('sku_id', skuId)
         .eq('year', year)
@@ -80,11 +72,7 @@ export class SalesDataModel {
     try {
       let query = this.supabase
         .from(this.tableName)
-        .select(`
-          *,
-          stores!inner(*),
-          skus!inner(*)
-        `)
+        .select('*')
         .eq('store_id', storeId);
       
       if (options.year) {
@@ -117,11 +105,7 @@ export class SalesDataModel {
     try {
       let query = this.supabase
         .from(this.tableName)
-        .select(`
-          *,
-          stores!inner(*),
-          skus!inner(*)
-        `)
+        .select('*')
         .eq('sku_id', skuId);
       
       if (options.year) {
@@ -154,11 +138,7 @@ export class SalesDataModel {
     try {
       let query = this.supabase
         .from(this.tableName)
-        .select(`
-          *,
-          stores!inner(*),
-          skus!inner(*)
-        `)
+        .select('*')
         .gte('date', startDate)
         .lte('date', endDate);
       
@@ -221,11 +201,7 @@ export class SalesDataModel {
         .eq('sku_id', skuId)
         .eq('year', year)
         .eq('day', day)
-        .select(`
-          *,
-          stores!inner(*),
-          skus!inner(*)
-        `)
+        .select('*')
         .single();
       
       if (error) throw error;
@@ -319,11 +295,7 @@ export class SalesDataModel {
     try {
       let query = this.supabase
         .from(this.tableName)
-        .select(`
-          *,
-          stores!inner(*),
-          skus!inner(*)
-        `)
+        .select('*')
         .eq('type_of_day', typeOfDay);
       
       if (options.year) {

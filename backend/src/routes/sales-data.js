@@ -59,14 +59,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/sales-data/:storeId/:skuId/:year/:day - Get specific sales data by primary key
-router.get('/:storeId/:skuId/:year/:day', async (req, res) => {
+// GET /api/sales-data/:store_id/:sku_id/:year/:day - Get specific sales data by composite primary key
+router.get('/:store_id/:sku_id/:year/:day', async (req, res) => {
   try {
-    const { storeId, skuId, year, day } = req.params;
+    const { store_id, sku_id, year, day } = req.params;
     
     const salesData = await SalesDataModel.findByPrimaryKey(
-      storeId, 
-      skuId, 
+      store_id, 
+      sku_id, 
       parseInt(year), 
       parseInt(day)
     );
@@ -92,10 +92,10 @@ router.get('/:storeId/:skuId/:year/:day', async (req, res) => {
   }
 });
 
-// GET /api/sales-data/store/:storeId - Get sales data for a specific store
-router.get('/store/:storeId', async (req, res) => {
+// GET /api/sales-data/store/:store_id - Get sales data for a specific store
+router.get('/store/:store_id', async (req, res) => {
   try {
-    const { storeId } = req.params;
+    const { store_id } = req.params;
     const { year, start_date, end_date, limit } = req.query;
     
     let options = {};
@@ -106,7 +106,7 @@ router.get('/store/:storeId', async (req, res) => {
     }
     if (limit) options.limit = parseInt(limit);
     
-    const salesData = await SalesDataModel.findByStore(storeId, options);
+    const salesData = await SalesDataModel.findByStore(store_id, options);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -122,10 +122,10 @@ router.get('/store/:storeId', async (req, res) => {
   }
 });
 
-// GET /api/sales-data/sku/:skuId - Get sales data for a specific SKU
-router.get('/sku/:skuId', async (req, res) => {
+// GET /api/sales-data/sku/:sku_id - Get sales data for a specific SKU
+router.get('/sku/:sku_id', async (req, res) => {
   try {
-    const { skuId } = req.params;
+    const { sku_id } = req.params;
     const { year, start_date, end_date, limit } = req.query;
     
     let options = {};
@@ -136,7 +136,7 @@ router.get('/sku/:skuId', async (req, res) => {
     }
     if (limit) options.limit = parseInt(limit);
     
-    const salesData = await SalesDataModel.findBySku(skuId, options);
+    const salesData = await SalesDataModel.findBySku(sku_id, options);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -152,10 +152,10 @@ router.get('/sku/:skuId', async (req, res) => {
   }
 });
 
-// GET /api/sales-data/type-of-day/:typeOfDay - Get sales data by type of day
-router.get('/type-of-day/:typeOfDay', async (req, res) => {
+// GET /api/sales-data/type-of-day/:type_of_day - Get sales data by type of day
+router.get('/type-of-day/:type_of_day', async (req, res) => {
   try {
-    const { typeOfDay } = req.params;
+    const { type_of_day } = req.params;
     const { year, store_id, limit } = req.query;
     
     let options = {};
@@ -164,7 +164,7 @@ router.get('/type-of-day/:typeOfDay', async (req, res) => {
     if (store_id) options.storeId = store_id;
     if (limit) options.limit = parseInt(limit);
     
-    const salesData = await SalesDataModel.findByTypeOfDay(typeOfDay, options);
+    const salesData = await SalesDataModel.findByTypeOfDay(type_of_day, options);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -180,10 +180,10 @@ router.get('/type-of-day/:typeOfDay', async (req, res) => {
   }
 });
 
-// GET /api/sales-data/analytics/store/:storeId - Get analytics for a specific store
-router.get('/analytics/store/:storeId', async (req, res) => {
+// GET /api/sales-data/analytics/store/:store_id - Get analytics for a specific store
+router.get('/analytics/store/:store_id', async (req, res) => {
   try {
-    const { storeId } = req.params;
+    const { store_id } = req.params;
     const { year, start_date, end_date } = req.query;
     
     let options = {};
@@ -193,7 +193,7 @@ router.get('/analytics/store/:storeId', async (req, res) => {
       options.dateRange = { start: start_date, end: end_date };
     }
     
-    const analytics = await SalesDataModel.getStoreAnalytics(storeId, options);
+    const analytics = await SalesDataModel.getStoreAnalytics(store_id, options);
     
     res.status(STATUS_CODES.OK).json({
       success: true,
@@ -302,10 +302,10 @@ router.post('/batch', async (req, res) => {
   }
 });
 
-// PUT /api/sales-data/:storeId/:skuId/:year/:day - Update sales data
-router.put('/:storeId/:skuId/:year/:day', async (req, res) => {
+// PUT /api/sales-data/:store_id/:sku_id/:year/:day - Update sales data
+router.put('/:store_id/:sku_id/:year/:day', async (req, res) => {
   try {
-    const { storeId, skuId, year, day } = req.params;
+    const { store_id, sku_id, year, day } = req.params;
     const updateData = req.body;
     
     // Convert numeric fields if they exist
@@ -317,8 +317,8 @@ router.put('/:storeId/:skuId/:year/:day', async (req, res) => {
     });
     
     const updatedSalesData = await SalesDataModel.update(
-      storeId, 
-      skuId, 
+      store_id, 
+      sku_id, 
       parseInt(year), 
       parseInt(day), 
       updateData
@@ -338,10 +338,10 @@ router.put('/:storeId/:skuId/:year/:day', async (req, res) => {
   }
 });
 
-// DELETE /api/sales-data/:storeId/:skuId/:year/:day - Delete sales data
-router.delete('/:storeId/:skuId/:year/:day', async (req, res) => {
+// DELETE /api/sales-data/:store_id/:sku_id/:year/:day - Delete sales data
+router.delete('/:store_id/:sku_id/:year/:day', async (req, res) => {
   try {
-    const { storeId, skuId, year, day } = req.params;
+    const { store_id, sku_id, year, day } = req.params;
     
     await SalesDataModel.delete(storeId, skuId, parseInt(year), parseInt(day));
     
